@@ -8,5 +8,6 @@ todoapp:
 logging:
   level:
     '[org.springframework.web]': debug
+    '[src.main.todoapp]': debug
     web: debug
     sql: debug
