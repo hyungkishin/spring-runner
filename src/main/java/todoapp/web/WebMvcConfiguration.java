@@ -11,7 +11,7 @@ import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
  * @author springrunner.kr@gmail.com
  */
 @Configuration
-public class WebMvcConfiguration implements WebMvcConfigurer {
+public class WebMvcConfiguration implements WebMvcConfigurer { // 이걸 spring container 에게 주면 container 의 설정 정보가 바뀐다.
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
