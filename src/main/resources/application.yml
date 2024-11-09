@@ -2,6 +2,8 @@ todoapp:
   site:
     author: hyungkishin
     description: todoApp Templates for Server-side
+  data:
+    init: true
 
 logging:
   level:
