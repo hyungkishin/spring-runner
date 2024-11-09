@@ -1,3 +1,8 @@
+todoapp:
+  site:
+    author: hyungkishin
+    description: todoApp Templates for Server-side
+
 logging:
   level:
     '[org.springframework.web]': debug
