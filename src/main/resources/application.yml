@@ -4,6 +4,9 @@ todoapp:
     description: todoApp Templates for Server-side
   data:
     init: true
+  feature-toggles:
+    auth: true
+    onlineUsersCounter: false
 
 server:
   servlet:
