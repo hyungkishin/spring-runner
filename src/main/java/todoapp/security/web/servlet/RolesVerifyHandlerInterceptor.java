@@ -10,8 +10,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import todoapp.security.AccessDeniedException;
 import todoapp.security.UnauthorizedAccessException;
-import todoapp.security.UserSession;
-import todoapp.security.UserSessionHolder;
 import todoapp.security.support.RolesAllowedSupport;
 
 import java.util.Objects;
@@ -25,16 +23,13 @@ import java.util.stream.Stream;
  */
 public class RolesVerifyHandlerInterceptor implements HandlerInterceptor, RolesAllowedSupport {
 
-    private final UserSessionHolder userSessionHolder;
+    // private final UserSessionHolder userSessionHolder; // HttpServletRequest 내부에 강력한 기능으로 없어질 수 있다.
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public RolesVerifyHandlerInterceptor(UserSessionHolder userSessionHolder) {
-        this.userSessionHolder = Objects.requireNonNull(userSessionHolder);
-    }
-
     @Override
-    public final boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public final boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//        request.getUserPrincipal(); // 이 인증정보 는 뭔가요 ?
+//        request.isUserInRole(); // 이 유저 인가된 사용자가 맞나요 ?
         if (handler instanceof HandlerMethod handlerMethod) {
             // 로그인이 되어있는가 ?
             var roleAllowed = handlerMethod.getMethodAnnotation(RolesAllowed.class);
@@ -51,14 +46,13 @@ public class RolesVerifyHandlerInterceptor implements HandlerInterceptor, RolesA
                 log.debug("verify roles-allowed: {}", roleAllowed);
 
                 // 1. 로그인이 되어있나요 ?
-                UserSession userSession = userSessionHolder.get();
-                if (Objects.isNull(userSession)) {
+                if (Objects.isNull(request.getUserPrincipal())) {
                     throw new UnauthorizedAccessException();
                 }
 
                 // 2. 역할은 적절한가요 ?
                 var matchedRoles = Stream.of(roleAllowed.value())
-                        .filter(userSession::hasRole)
+                        .filter(request::isUserInRole)
                         .collect(Collectors.toSet());
 
                 log.debug("matched roles: {}", matchedRoles);
@@ -69,6 +63,7 @@ public class RolesVerifyHandlerInterceptor implements HandlerInterceptor, RolesA
 
             }
         }
+
         return true;
     }
 

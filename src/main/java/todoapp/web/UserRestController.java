@@ -1,24 +1,20 @@
 package todoapp.web;
 
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import todoapp.security.UserSession;
-import todoapp.security.UserSessionHolder;
 import todoapp.web.model.UserProfile;
-
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
+@RolesAllowed(UserSession.ROLE_USER)
 @RequestMapping("/api/user")
 public class UserRestController {
 
-    private final UserSessionHolder userSessionHolder;
-
+    /* @RolesAllowed(UserSession.ROLE_USER)
     @GetMapping("/profile")
     public ResponseEntity<UserProfile> userProfile(UserSession userSession) {
         if (Objects.nonNull(userSession)) {
@@ -27,6 +23,11 @@ public class UserRestController {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .build();
+    } */
+
+    @GetMapping("/profile")
+    public UserProfile userProfile(UserSession userSession) {
+        return new UserProfile(userSession.getUser());
     }
 
 }

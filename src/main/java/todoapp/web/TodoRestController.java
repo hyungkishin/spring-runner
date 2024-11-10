@@ -31,6 +31,7 @@ public class TodoRestController {
 
     private final TodoCleanup todoCleanup;
 
+    //    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @GetMapping
     public @ResponseBody Iterable<Todo> readAll() {
         return find.all();

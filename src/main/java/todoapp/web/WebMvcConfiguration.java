@@ -32,7 +32,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer { // 이걸 spring 
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RolesVerifyHandlerInterceptor(userSessionHolder));
+        registry.addInterceptor(new RolesVerifyHandlerInterceptor());
     }
 
     // 정파의 방법 A ~ Z
