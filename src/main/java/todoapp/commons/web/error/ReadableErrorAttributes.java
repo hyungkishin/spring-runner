@@ -28,7 +28,7 @@ public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptio
 
     private final DefaultErrorAttributes delegate = new DefaultErrorAttributes();
     private final Logger log = LoggerFactory.getLogger(getClass());
-    
+
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
         var attributes = delegate.getErrorAttributes(webRequest, options);
@@ -69,5 +69,5 @@ public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptio
         }
         return null;
     }
-    
+
 }

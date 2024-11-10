@@ -10,6 +10,9 @@ server:
     encoding:
       charset: utf-8
       force: true
+  error:
+    include-binding-errors: always
+    include-message: always
 
 logging:
   level:

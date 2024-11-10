@@ -1,10 +1,13 @@
 package todoapp.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
+import todoapp.commons.web.error.ReadableErrorAttributes;
 import todoapp.commons.web.view.CommaSeparatedValuesView;
 
 import java.util.ArrayList;
@@ -23,6 +26,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer { // 이걸 spring 
         // registry.enableContentNegotiation();
         // 위와 같이 직접 설정하면, 스프링부트가 구성한 ContentNegotiatingViewResolver 전략이 무시된다.
         registry.enableContentNegotiation();
+    }
+
+    @Bean
+    ErrorAttributes errorAttributes() {
+        return new ReadableErrorAttributes();
     }
 
 //    @Bean("todos")
