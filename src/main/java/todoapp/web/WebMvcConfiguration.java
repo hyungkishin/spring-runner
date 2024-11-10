@@ -2,6 +2,7 @@ package todoapp.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -29,8 +30,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer { // 이걸 spring 
     }
 
     @Bean
-    ErrorAttributes errorAttributes() {
-        return new ReadableErrorAttributes();
+    ErrorAttributes errorAttributes(MessageSource messageSource) {
+        return new ReadableErrorAttributes(messageSource);
     }
 
 //    @Bean("todos")

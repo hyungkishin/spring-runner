@@ -2,19 +2,22 @@ package todoapp.commons.web.error;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.Ordered;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 스프링부트에 기본 구현체인 {@link DefaultErrorAttributes}에 message 속성을 덮어쓰기 할 목적으로 작성한 컴포넌트이다.
@@ -24,10 +27,17 @@ import java.util.Objects;
  *
  * @author springrunner.kr@gmail.com
  */
+@Slf4j
 public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptionResolver, Ordered {
 
     private final DefaultErrorAttributes delegate = new DefaultErrorAttributes();
-    private final Logger log = LoggerFactory.getLogger(getClass());
+//    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private final MessageSource messageSource;
+
+    public ReadableErrorAttributes(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
@@ -39,6 +49,24 @@ public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptio
         if (Objects.nonNull(error)) {
             // TODO attributes, error 을 사용해 message 속성을 읽기 좋은 문구로 가공한다.
             // TODO ex) attributes.put("message", "문구");
+            var errorMessage = error.getMessage();
+            if (error instanceof MessageSourceResolvable it) {
+                errorMessage = messageSource.getMessage(it, webRequest.getLocale());
+            } else {
+                var errorCode = "Exception.%s".formatted(error.getClass().getSimpleName());
+                log.info("errorCode : {} ", errorCode);
+                errorMessage = messageSource.getMessage(errorCode, new Object[0], error.getMessage(), webRequest.getLocale());
+            }
+            attributes.put("message", errorMessage);
+        }
+
+        var bindingResult = extractBindingResult(error);
+        log.info("bindingResult: {}", bindingResult);
+        if (Objects.nonNull(bindingResult)) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(it -> messageSource.getMessage(it, webRequest.getLocale()))
+                    .collect(Collectors.toList());
+            attributes.put("errors", errors);
         }
 
         return attributes;
