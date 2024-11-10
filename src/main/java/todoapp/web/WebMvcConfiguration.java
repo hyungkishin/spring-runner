@@ -6,14 +6,17 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import todoapp.commons.web.error.ReadableErrorAttributes;
 import todoapp.commons.web.view.CommaSeparatedValuesView;
+import todoapp.core.user.domain.ProfilePictureStorage;
 import todoapp.security.UserSessionHolder;
 import todoapp.security.web.servlet.RolesVerifyHandlerInterceptor;
+import todoapp.web.support.method.ProfilePictureReturnValueHandler;
 import todoapp.web.support.method.UserSessionHandlerMethodArgumentResolver;
 
 import java.util.ArrayList;
@@ -29,6 +32,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer { // 이걸 spring 
 
     @Autowired
     private UserSessionHolder userSessionHolder;
+
+    @Autowired
+    private ProfilePictureStorage profilePictureStorage;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -46,6 +52,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer { // 이걸 spring 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new UserSessionHandlerMethodArgumentResolver(userSessionHolder));
+    }
+
+    @Override
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+        handlers.add(new ProfilePictureReturnValueHandler(profilePictureStorage));
     }
 
     @Bean
