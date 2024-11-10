@@ -2,7 +2,11 @@ package todoapp.core.todo.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import todoapp.core.todo.domain.*;
+import todoapp.core.todo.domain.Todo;
+import todoapp.core.todo.domain.TodoEntityNotFoundException;
+import todoapp.core.todo.domain.TodoId;
+import todoapp.core.todo.domain.TodoIdGenerator;
+import todoapp.core.todo.domain.TodoRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +18,7 @@ import java.util.Objects;
  */
 @Service
 @Transactional
-class DefaultTodoManager implements TodoFind, TodoRegistry, TodoModification, TodoCleanup {
+public class DefaultTodoManager implements TodoFind, TodoRegistry, TodoModification, TodoCleanup {
 
     private final TodoIdGenerator todoIdGenerator;
     private final TodoRepository todoRepository;

@@ -5,9 +5,15 @@ todoapp:
   data:
     init: true
 
+server:
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+
 logging:
   level:
+    '[todoapp]': debug
     '[org.springframework.web]': debug
-    '[src.main.todoapp]': debug
     web: debug
     sql: debug
