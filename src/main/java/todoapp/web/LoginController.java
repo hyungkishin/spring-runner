@@ -14,6 +14,8 @@ import todoapp.core.user.application.UserRegistration;
 import todoapp.core.user.domain.User;
 import todoapp.core.user.domain.UserEntityNotFoundException;
 import todoapp.core.user.domain.UserPasswordNotMatchedException;
+import todoapp.security.UserSession;
+import todoapp.security.UserSessionHolder;
 
 @Slf4j
 @Controller
@@ -23,6 +25,8 @@ public class LoginController {
     private final UserPasswordVerifier userPasswordVerifier;
 
     private final UserRegistration userRegistration;
+
+    private final UserSessionHolder userSessionHolder;
 
     @RequestMapping("/login")
     public void loginForm(Model model) {
@@ -43,16 +47,19 @@ public class LoginController {
             model.addAttribute("message", "입력 값에 문제가 있어요");
             return "login";
         }
+
+        User user = null;
         try {
-            User user = userPasswordVerifier.verify(request.username, request.password);
-            user.verifyPassword(request.password);
+            user = userPasswordVerifier.verify(request.username, request.password);
         } catch (UserEntityNotFoundException e) {
-            userRegistration.join(request.username(), request.password());
+            user = userRegistration.join(request.username(), request.password());
         } catch (UserPasswordNotMatchedException e) {
             model.addAttribute("bindingResult", bindingResult);
             model.addAttribute("message", "비밀번호 틀렸습니다.");
             return "login";
         }
+
+        userSessionHolder.set(new UserSession(user));
 
         return "redirect:/todos";
     }
