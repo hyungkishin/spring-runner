@@ -6,12 +6,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import todoapp.commons.web.error.ReadableErrorAttributes;
 import todoapp.commons.web.view.CommaSeparatedValuesView;
 import todoapp.security.UserSessionHolder;
+import todoapp.security.web.servlet.RolesVerifyHandlerInterceptor;
 import todoapp.web.support.method.UserSessionHandlerMethodArgumentResolver;
 
 import java.util.ArrayList;
@@ -27,6 +29,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer { // 이걸 spring 
 
     @Autowired
     private UserSessionHolder userSessionHolder;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new RolesVerifyHandlerInterceptor(userSessionHolder));
+    }
 
     // 정파의 방법 A ~ Z
     @Override
