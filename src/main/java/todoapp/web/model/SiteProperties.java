@@ -1,5 +1,7 @@
 package todoapp.web.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -7,26 +9,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author springrunner.kr@gmail.com
  */
+@Getter
+@Setter
 @ConfigurationProperties("todoapp.site")
 public class SiteProperties {
 
     private String author = "unknown";
+
     private String description = "TodoApp templates for Server-side";
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
 }
