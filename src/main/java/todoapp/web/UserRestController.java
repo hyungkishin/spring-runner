@@ -20,8 +20,7 @@ public class UserRestController {
     private final UserSessionHolder userSessionHolder;
 
     @GetMapping("/profile")
-    public ResponseEntity<UserProfile> userProfile() {
-        UserSession userSession = userSessionHolder.get();
+    public ResponseEntity<UserProfile> userProfile(UserSession userSession) {
         if (Objects.nonNull(userSession)) {
             return ResponseEntity.ok(new UserProfile(userSession.getUser()));
         }
